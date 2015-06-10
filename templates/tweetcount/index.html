@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Tweet Counter</title>
+    </head>
+
+    <body>
+    	<form method="post" action="">
+    		{% csrf_token %}
+    		Input Hashtag: <input type="text" name="search">
+       		<input type="submit" value="Submit" />
+		</form><br/><br/><br/><br/>
+		{% if total_tweets %}
+			<p align="center">crunched {{ total_tweets }} tweets and {{ total_users }} users<br/>
+		    most tweets were by user: @{{ max_tweet_user }} <br/></p>
+		{% else %}
+			<p align="center">No tweet found</p>
+			{% endif %}
+    </body>
+
+</html>
+
