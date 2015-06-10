@@ -10,24 +10,38 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 
-ckey = 'KiayJC5pk0WDOyjDXT4hsJuPu'
-csecret = 'vhNLlesbu7g76bGYe8QbEPlN2A1i6S7awMFT00fpdCsN6JChEC'
-atoken = '112985000-mNu6xiweK7p92LXAnKhGtXm8Seglk3FrovT8wtaR'
-asecret = 'nGLnxhGWSBDMWO8bqwcee5T4NwL09rQWJoCp3PlIEo9na'
+ckey = ''
+csecret = ''
+atoken = ''
+asecret = ''
 
 class listener(StreamListener):
 
 	def on_data(self, data):
+		print data
 		data = json.loads(data)
-		sname = data['user']['screen_name']
-		name = data['user']['name']
-		fcount = data['user']['followers_count']
-		c1 = User_n(screen_name=sname, user_name=name, followers=fcount)
+		try:
+			sname = data['user']['screen_name']
+			name = data['user']['name']
+			fcount = data['user']['followers_count']
+		except:
+			return False
+		if sname and name and fcount:
+			c1 = User_n(screen_name=sname, user_name=name, followers=fcount)
+		else:
+			return False
 		c1.save()
-		src =data['source']
-		ttext = data['text']
-		c2 = Tweet(id=None, tweet_text=ttext, screen_name=c1, source=src)
+		try:
+			src =data['source']
+			ttext = data['text']
+		except:
+			return False
+		if ttext and src:
+			c2 = Tweet(id=None, tweet_text=ttext, screen_name=c1, source=src)
+		else:
+			return False
 		c2.save()
+		print "done"
 		return True
 
 	def on_error(self, status):
